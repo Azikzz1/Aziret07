@@ -1,5 +1,5 @@
-# echo.py
-from aiogram import types, Dispatcher
+from aiogram import types
+from aiogram.dispatcher import Dispatcher
 
 
 async def echo_handler(message: types.Message):
@@ -8,18 +8,8 @@ async def echo_handler(message: types.Message):
         squared_number = number ** 2
         await message.answer(str(squared_number))
     except ValueError:
-        if "game" in message.text.lower():
-            games = ['⚽', '🎰', '🏀', '🎯', '🎳', '🎲']
-            await message.answer_dice(emoji=games[5])
-        else:
-            await message.answer(message.text)
+        await message.answer(message.text)
 
 
 def register_echo_handlers(dp: Dispatcher):
     dp.register_message_handler(echo_handler)
-
-
-
-
-
-
