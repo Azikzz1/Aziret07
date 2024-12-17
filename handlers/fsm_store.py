@@ -15,6 +15,7 @@ class FSMShop(StatesGroup):
     category = State()
     productid = State()
     infoproduct = State()
+    collection = State()
     submit = State()
 
 
@@ -68,7 +69,13 @@ async def load_productid(message: types.Message, state: FSMContext):
 async def load_infoproduct(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['infoproduct'] = message.text
+    await FSMShop.next()
+    await message.answer('Введите коллекцию продукты:')
 
+
+async def load_collection(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['collection'] = message.text
     await FSMShop.next()
     await message.answer(f'Верные ли данные?')
     await message.answer_photo(photo=data['photo'],
@@ -78,6 +85,7 @@ async def load_infoproduct(message: types.Message, state: FSMContext):
                                        f'ProductID: {data["productid"]}\n'
                                        f'Категория: {data["category"]}\n'
                                        f'Описание продукта: {data["infoproduct"]}\n'
+                                       f'Введите коллекцию продукта: {data["collection"]}\n'
                                        f'Все верно? (Да/Нет)')
     await FSMShop.submit.set()
 
@@ -96,6 +104,10 @@ async def load_submit(message: types.Message, state: FSMContext):
                 productid=data['productid'],
                 category=data['category'],
                 infoproduct=data['infoproduct']
+            )
+            await main_db.sql_insert_collection_products(
+                productid=data['productid'],
+                collection=data['collection']
             )
             await message.answer('Товар успешно добавлен!', reply_markup=start_markup)
         await state.finish()
@@ -124,4 +136,5 @@ def register_fsmshop_handlers(dp: Dispatcher):
     dp.register_message_handler(load_productid, state=FSMShop.productid)
     dp.register_message_handler(load_category, state=FSMShop.category)
     dp.register_message_handler(load_infoproduct, state=FSMShop.infoproduct)
+    dp.register_message_handler(load_collection, state=FSMShop.collection)
     dp.register_message_handler(load_submit, state=FSMShop.submit)

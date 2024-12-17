@@ -29,6 +29,14 @@ CREATE_TABLE_products_details = """
     )
 """
 
+CREATE_TABLE_collection_products = """
+    CREATE TABLE IF NOT EXISTS collection_products(
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    productid INTEGER,
+    collection TEXT
+    )
+"""
+
 INSERT_registered_QUERY = """
     INSERT INTO registered (fullname, age, gender, email, photo)
     VALUES (?, ?, ?, ?, ?)
@@ -42,4 +50,9 @@ INSERT_STORE_QUERY = """
 INSERT_products_details_QUERY = """
     INSERT INTO products_details (productid, category, infoproduct)
     VALUES (?, ?, ?)
+"""
+
+INSERT_collection_products_QUERY = """
+    INSERT INTO collection_products (productid, collection)
+    VALUES (?, ?)
 """

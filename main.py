@@ -36,9 +36,3 @@ if __name__ == '__main__':
 
 
 
-# await message.answer_photo(photo=data['photo'],
-#                             caption=f"Название модели: {data['model_name']}\n"
-#                                     f"Размер: {data['size_1']}\n"
-#                                     f"Категория: {data['category']}\n"
-#                                     f"Стоимость: {data['price']}\n"
-#                                     f"Все верно? (Да/Нет)")
