@@ -46,3 +46,35 @@ async def sql_insert_collection_products(productid, collection):
         productid, collection
     ))
     db_store.commit()
+
+
+# CRUD - Read
+# =====================================================
+# Основное подключение к базе (Для CRUD)
+def get_db_connection():
+    conn = sqlite3.connect('db/STORE.sqlite3')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def fetch_all_products():
+    conn = get_db_connection()
+    products = conn.execute("""
+    SELECT * from STORE S
+    INNER JOIN products_details  PD 
+    INNER JOIN collection_products  CP
+    ON S.productid = PD.productid = CP.productid
+    """).fetchall()
+    conn.close()
+    return products
+
+
+# CRUD - Delete
+# =====================================================
+def delete_product(productid):
+    conn = get_db_connection()
+    conn.execute('DELETE FROM STORE WHERE productid = ?', (productid,))
+    conn.execute('DELETE FROM products_details WHERE productid = ?', (productid,))
+    conn.execute('DELETE FROM collection_products WHERE productid = ?', (productid,))
+    conn.commit()
+    conn.close()
